@@ -1,0 +1,29 @@
+{
+  "name": "rate-limiting",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+  "dev": "nodemon ./src/index.js",
+  "start": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chiragshrimal/Rate-Limiter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chiragshrimal/Rate-Limiter/issues"
+  },
+  "homepage": "https://github.com/chiragshrimal/Rate-Limiter#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "ioredis": "^5.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
