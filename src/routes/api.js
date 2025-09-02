@@ -1,37 +1,42 @@
-import express from "express"
+import express from "express";
 import redis from "../config/redis.js";
 
-import rateLimiterMiddleware from "../middlewares/rateLimiter.js";
 import fixedWindowLimiter from "../limiter/fixedWindow.js";
+import leakyBucketLimiter from "../limiter/leakyBucket.js";
+import tokenBucketLimiter from "../limiter/tokenBucket.js";
+import createSlidingWindowLimiter from "../limiter/slidingWindowLog.js";
 
-const router= express.Router();
 
-// rateLimiterMiddleware function  will  take two param 1. limit  2. windowsize in sec
-router.get("/api/slidingWindow",rateLimiterMiddleware(5,10),(req,res)=>{
+
+const router = express.Router();
+
+router.get("/redis",async(req,res)=>{
+    const pong= await redis.ping();
+    console.log("request come on /redis");
+    res.json({
+        message : `redis sent the message ${pong}`
+    })
+})
+
+router.get("/sliding", createSlidingWindowLimiter(10, 5), (req, res) => {
     
-    console.log("request comming on the /api/data router");
+  console.log("request come on /sliding");
+  res.send("Sliding window OK");
+});
 
-    res.json({
-        message : "take your data which you have required"
-    })
-})
+router.get("/fixed", fixedWindowLimiter(10, 5), (req, res) => {
+    console.log("request come on /fixed")
+  res.send("Fixed window OK");
+});
 
-router.get("/api/fixedWindow",fixedWindowLimiter(5,10), (req,res)=>{
-    
-    console.log("request comming from /api/fixedWindow");
+router.get("/token", tokenBucketLimiter(5, 1), (req, res) => {
+  console.log("request come on /token");
+  res.send("Token bucket OK");
+});
 
-    res.json({
-        message : "success in fixedWindow"
-    })
-})
-
-
-router.get("/api/redis",rateLimiterMiddleware(5,10),async(req,res)=>{
-
-    const pong = await redis.ping();
-    res.json({
-        message : `message from the redis is ${pong}`
-    })
-})
+router.get("/leaky", leakyBucketLimiter(5, 1), (req, res) => {
+  console.log("request come on /leaky");  
+  res.send("Leaky bucket OK");
+});
 
 export default router;

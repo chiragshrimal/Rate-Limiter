@@ -1,5 +1,5 @@
 // tokenBucket.js
-import redis from "./redisClient.js";
+import redis from "../config/redis";
 
 export const tokenBucketLimiter = (capacity, refillRatePerSec) => {
   return async (req, res, next) => {
@@ -24,3 +24,5 @@ export const tokenBucketLimiter = (capacity, refillRatePerSec) => {
     next();
   };
 };
+
+export default tokenBucketLimiter;
